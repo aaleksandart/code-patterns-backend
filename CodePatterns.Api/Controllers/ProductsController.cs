@@ -29,15 +29,15 @@ namespace CodePatterns.Api.Controllers
             await _data.GetProductAsync(id);
 
         [HttpPost]
-        public async void CreateProductAsync([FromBody] string value) =>
-            await _data.CreateProductAsync();
+        public async Task<IActionResult> CreateProductAsync(ShoeModel shoe) =>
+            await _data.CreateProductAsync(shoe);
 
         [HttpPut("{id}")]
-        public async void UpdateProductAsync(int id, [FromBody] string value) =>
+        public async Task<IActionResult> UpdateProductAsync(int id, IProductModel productUpdate) =>
             await _data.UpdateProductAsync();
 
         [HttpDelete("{id}")]
-        public void DeleteProductAsync(int id) =>
-            throw new NotImplementedException();
+        public async Task<IActionResult> DeleteProductAsync(int id) =>
+            await _data.DeleteProductAsync();
     }
 }

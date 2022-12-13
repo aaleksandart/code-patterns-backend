@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodePatterns.Data.Models
+namespace CodePatterns.Data.Services
 {
-    public interface IJacketModel : IProductModel
+    public interface ICreateModels
     {
 
     }
-    public class JacketModel : ProductModel, IJacketModel
+    public class CreateModels : ICreateModels
     {
     }
 }

@@ -8,9 +8,12 @@ namespace CodePatterns.Data.Models
 {
     public interface IDressModel : IProductModel
     {
-
+        string DressType { get; set; }
+        string DressSize { get; set; }
     }
     public class DressModel : ProductModel, IDressModel
     {
+        public string DressType { get; set; } = null!;
+        public string DressSize { get; set; } = null!;
     }
 }
