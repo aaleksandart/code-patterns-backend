@@ -10,34 +10,47 @@ namespace CodePatterns.Api.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
+        // Jag valde att samla alla requests som gäller produkter i en controller
+        // jag hade troligtvis gjort annorlunda om jag hade fler produkter.
+        // Eftersom controllern bara hanterar produkter så följer den fortfarnade SRP.
+
         private readonly IDataLayer _data;
         public ProductsController(IDataLayer data)
         {
             _data = data;
         }
 
+        #region Get requests
         [HttpGet]
         public async Task<IEnumerable<IProductModel>> GetProductsAsync() =>
             await _data.GetProductsAsync();
 
-        [HttpGet("{category}")]
-        public async Task<IEnumerable<IProductModel>> GetProductsByCategoryAsync(string category) =>
-            await _data.GetProductsByCategoryAsync();
-
         [HttpGet("{id}")]
-        public async Task<IProductModel> GetProductAsync(int id) =>
+        public async Task<ObjectResult> GetProductAsync(int id) =>
             await _data.GetProductAsync(id);
+        #endregion
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProductAsync(ShoeModel shoe) =>
-            await _data.CreateProductAsync(shoe);
+        #region Post requests
+        
+        [HttpPost("shoe")]
+        public async Task<IActionResult> CreateShoeAsync(ShoeModel product) =>
+            await _data.CreateProductAsync(product);
 
+        [HttpPost("dress")]
+        public async Task<IActionResult> CreateDressAsync(DressModel product) =>
+            await _data.CreateProductAsync(product);
+        #endregion
+
+        #region Update requests
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProductAsync(int id, IProductModel productUpdate) =>
             await _data.UpdateProductAsync();
+        #endregion
 
+        #region Delete requests
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductAsync(int id) =>
             await _data.DeleteProductAsync();
+        #endregion
     }
 }

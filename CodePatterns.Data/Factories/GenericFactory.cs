@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace CodePatterns.Data.Factories
 {
-    public interface IProductFactory
+    public interface IGenericFactory
     {
-        T CreateProduct<T>() where T : class, new();
+        T CreateGeneric<T>() where T : class, new();
     }
-    public class ProductFactory : IProductFactory
+    public class GenericFactory : IGenericFactory
     {
-        public T CreateProduct<T>() where T : class, new() =>
+        public T CreateGeneric<T>() where T : class, new() =>
             new T();
     }
 }

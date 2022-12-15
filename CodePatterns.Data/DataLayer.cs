@@ -3,6 +3,7 @@ using CodePatterns.Data.Factories;
 using CodePatterns.Data.Models;
 using CodePatterns.Data.Models.Entities;
 using CodePatterns.Data.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,74 +21,60 @@ namespace CodePatterns.Data
     public interface IDataLayer
     {
         Task<IEnumerable<IProductModel>> GetProductsAsync();
-        Task<IEnumerable<IProductModel>> GetProductsByCategoryAsync();
-        Task<IProductModel> GetProductAsync(int id);
+        Task<ObjectResult> GetProductAsync(int id);
         Task<IActionResult> CreateProductAsync(IProductModel productModel);
         Task<IActionResult> UpdateProductAsync();
         Task<IActionResult> DeleteProductAsync();
     }
     public class DataLayer : ControllerBase, IDataLayer
     {
-        private readonly SqlContext _db;
-        private readonly ICreateEntities _createEntities;
-        private readonly ICreateModels _createModels;
-        public DataLayer(SqlContext db, 
-            ICreateEntities createEntities,
-            ICreateModels createModels)
+        private readonly ICreateProductService _createProduct;
+        private readonly IGetProductService _getProduct;
+        public DataLayer(ICreateProductService createProduct, IGetProductService getProduct)
         {
-            _db = db;
-            _createEntities = createEntities;
-            _createModels = createModels;
+            _createProduct = createProduct;
+            _getProduct = getProduct;
         }
 
-        public async Task<IEnumerable<IProductModel>> GetProductsAsync()
+        #region Get product
+        public async Task<IEnumerable<IProductModel>> GetProductsAsync() =>
+            await _getProduct.GetProductsAsync();
+        public async Task<ObjectResult> GetProductAsync(int id)
         {
-            var products = await _db.ProductDetail
-                .Include(x => x.Product)
-                .Include(x => x.Product.ProductType)
-                .ToListAsync();
-            var news = new List<IProductModel>();
-            return news;
+            try
+            {
+                var product = await _getProduct.GetProductAsync(id);
+                if (product.Id == 0)
+                    return NotFound(product);
+                return Ok(product);
+            }
+            catch { return new ObjectResult(StatusCode(500)); }
         }
-        public async Task<IEnumerable<IProductModel>> GetProductsByCategoryAsync()
-        {
-            throw new NotImplementedException();
-        }
-        public async Task<IProductModel> GetProductAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
+
+        #region Create product
         public async Task<IActionResult> CreateProductAsync(IProductModel productModel)
         {
-            //Skapar de två produkt typer om dem inte existerar redan
-            var productType = _createEntities.CreateProductTypeEntity(productModel.ProductType);
-            productType = await _db.ProductType.Where(x => x.Name == productModel.Name).FirstOrDefaultAsync();
-            if (productType.Id == 0)
-            {
-                await _db.AddAsync(productType);
-                await _db.SaveChangesAsync();
-            }
-
-            //Skapar ny produkt
-            var product = _createEntities.CreateProductEntity(
-                productModel, productType);
-            await _db.AddAsync(product);
-            await _db.SaveChangesAsync();
-
-            // Skapar nya produkt detaljer
-            var productDetails = _createEntities.CreateProductDetails(productModel, product);
-            await _db.AddAsync(productDetails);
-            await _db.SaveChangesAsync();
+            var created = await _createProduct.CreateProductAsync(productModel);
+            if (!created)
+                return BadRequest();
 
             return Created("", null);
         }
+        #endregion
+
+        #region Update product
         public async Task<IActionResult> UpdateProductAsync()
         {
             throw new NotImplementedException();
         }
+        #endregion
+
+        #region Delete product
         public async Task<IActionResult> DeleteProductAsync()
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 }

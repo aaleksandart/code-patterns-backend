@@ -15,9 +15,14 @@ builder.Services.AddSwaggerGen();
 
 //Data layer
 builder.Services.AddScoped<IDataLayer, DataLayer>();
-builder.Services.AddScoped<ICreateEntities, CreateEntities>();
-builder.Services.AddScoped<ICreateModels, CreateModels>();
-builder.Services.AddSingleton<IProductFactory, ProductFactory>();
+//Services
+builder.Services.AddScoped<ICreateProductService, CreateProductService>();
+builder.Services.AddScoped<IGetProductService, GetProductService>();
+//Factories
+builder.Services.AddSingleton<IProductModelFactory, ProductModelFactory>();
+builder.Services.AddSingleton<IProductEntityFactory, ProductEntityFactory>();
+builder.Services.AddSingleton<IGenericFactory, GenericFactory>();
+//Database
 builder.Services.AddDbContext<SqlContext>(
     x => x.UseSqlServer(config["DatabaseSettings:ConnectionString"]));
 

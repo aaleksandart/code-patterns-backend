@@ -37,14 +37,14 @@ namespace CodePatterns.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DressSize")
+                    b.Property<string>("DressLength")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DressType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EuSize")
-                        .HasColumnType("int");
+                    b.Property<bool>("Heels")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

@@ -8,14 +8,16 @@ namespace CodePatterns.Data.Models
 {
     public interface IShoeModel : IProductModel
     {
-        int EuSize { get; set; }
         string ShoeType { get; set; }
-        bool ShoeLaces { get; set; }
+        bool? ShoeLaces { get; set; }
+        bool Heels { get; set; }
+        string ProductType { get; set; }
     }
     public class ShoeModel : ProductModel, IShoeModel
     {
-        public int EuSize { get; set; }
-        public string ShoeType { get; set; } = null!;
-        public bool ShoeLaces { get; set; }
+        public string ShoeType { get; set; } = "standard";
+        public bool? ShoeLaces { get; set; }
+        public bool Heels { get; set; }
+        public override string ProductType { get; set; } = "shoe";
     }
 }

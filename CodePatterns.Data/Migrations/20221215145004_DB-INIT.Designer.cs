@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePatterns.Data.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    [Migration("20221213012032_init-db")]
-    partial class initdb
+    [Migration("20221215145004_DB-INIT")]
+    partial class DBINIT
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,14 +40,14 @@ namespace CodePatterns.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DressSize")
+                    b.Property<string>("DressLength")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DressType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EuSize")
-                        .HasColumnType("int");
+                    b.Property<bool>("Heels")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

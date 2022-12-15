@@ -16,10 +16,10 @@ namespace CodePatterns.Data.Models
         string Color { get; set; }
 
     }
-    public abstract class ProductModel : IProductModel
+    public class ProductModel : IProductModel
     {
         public int Id { get; set; }
-        public string ProductType { get; set; } = null!;
+        public virtual string ProductType { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = string.Empty!;
         public Guid Barcode { get; set; }
