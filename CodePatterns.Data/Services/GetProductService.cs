@@ -8,16 +8,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace CodePatterns.Data.Services
 {
-    //GetProductService hanterar alla get requests för produkter. Tanken var att separera
-    //detta ännu mer i olika klasser men det blev bara mer rörigt än vad det hjälpte.
-    //Alla metoder har en uppgift(SRP). 
+    /// <summary>
+    /// SRP: GetProductService har ett jobb, att hämta enstaka produkter.
+    /// 
+    /// OCP: Vi kan utöka den här klassen utan att ändra på existerande kod.
+    /// Mitt mål var en generell hämtning av en specifik produkt, detta fungerade
+    /// men bröt dessvärre mot OCP då den skulle behöva modifieras med en switch
+    /// sats varje gång en ny produkt typ lades till.
+    /// Därav specifika metoder för varje produkttyp.
+    /// 
+    /// ISP: Vi använder IGetProductService så att andra klasser bara har tillgång
+    /// till det som behövs för att hämta en produkt.
+    /// 
+    /// DIP: Vår service har inget konkret beroende utan beroendet är abstrakt 
+    /// genom interfaces och dependency injection för att nå factories och skapa objekt.
+    /// 
+    /// DRY: Vi använder en privat metod för att hämta en produkt från databasen oavsett typ.
+    /// </summary>
     public interface IGetProductService
     {
-        Task<IEnumerable<IProductModel>> GetProductsAsync();
-        Task<IProductModel> GetProductAsync(int id);
+        Task<IProductModel> GetShoeAsync(int id);
+        Task<IProductModel> GetDressAsync(int id);
     }
     public class GetProductService : IGetProductService
     {
@@ -31,54 +46,36 @@ namespace CodePatterns.Data.Services
             _genericFactory = genericFactory;
         }
 
-        #region Get all
-        public async Task<IEnumerable<IProductModel>> GetProductsAsync()
+        private async Task<ProductDetailEntity?> GetProductFromDB(int id)
         {
-            try
-            {
-                var modelList = _genericFactory.CreateGeneric<List<IProductModel>>();
-                foreach (var product in await _db.ProductDetail.Include(x => x.Product.ProductType).ToListAsync())
-                {
-                    switch (product.Product.ProductType.Name)
-                    {
-                        case "shoe":
-                            modelList.Add(_modelFactory.CreateShoeModel(product));
-                            break;
-                        case "dress":
-                            modelList.Add(_modelFactory.CreateDressModel(product));
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                return modelList;
-            }
-            catch { return _genericFactory.CreateGeneric<List<IProductModel>>(); }
+            var product = _genericFactory.CreateGeneric<ProductDetailEntity>();
+            return await _db.ProductDetail.Include(x => x.Product.ProductType).Where(p => p.ProductId == id).FirstOrDefaultAsync();
         }
-        #endregion
-
-        #region Get one
-        public async Task<IProductModel> GetProductAsync(int id)
+        public async Task<IProductModel> GetShoeAsync(int id)
         {
             try
             {
-                var product = await _db.ProductDetail.Include(x => x.Product.ProductType).Where(p => p.ProductId == id).FirstOrDefaultAsync();
-                if(product != null)
-                {
-                    switch (product.Product.ProductType.Name)
-                    {
-                        case "shoe":
-                            return _modelFactory.CreateShoeModel(product);
-                        case "dress":
-                            return _modelFactory.CreateDressModel(product);
-                        default:
-                            break;
-                    }
-                }
+                var shoe = await GetProductFromDB(id);
+                if (shoe != null)
+                    return _modelFactory.CreateShoeModel(shoe);
+
+                return _genericFactory.CreateGeneric<ProductModel>();
             }
             catch { return _genericFactory.CreateGeneric<ProductModel>(); }
-            return _genericFactory.CreateGeneric<ProductModel>();
         }
-        #endregion
+        public async Task<IProductModel> GetDressAsync(int id)
+        {
+            try
+            {
+                var dress = await GetProductFromDB(id);
+                if (dress != null)
+                    return _modelFactory.CreateDressModel(dress);
+
+                return _genericFactory.CreateGeneric<ProductModel>();
+            }
+            catch { return _genericFactory.CreateGeneric<ProductModel>(); }
+        }
     }
+
 }
+

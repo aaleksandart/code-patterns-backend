@@ -1,56 +1,37 @@
 ﻿using CodePatterns.Data;
 using CodePatterns.Data.Models;
+using CodePatterns.Data.Services;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CodePatterns.Api.Controllers
 {
-    [Route("api/[controller]")]
+    /// <summary>
+    /// SRP: ProductsController hanterar bara request som gäller att hämta alla produkter.
+    /// 
+    /// OCP: ProductsController kan utökas med funktionalitet/fler requests utan att den
+    /// existerande koden slutar fungera.
+    /// 
+    /// LSP: Det fanns inget behov att jobba med arv annat än ControllerBase som
+    /// är default i våra .NET api controllers.
+    /// 
+    /// ISP: Inte heller något behov av denna princip här.
+    /// 
+    /// DIP: Vår controller har inget konkret beroende utan beroendet är abstrakt 
+    /// genom interfaces och dependency injection för att nå services i klassbibliotek Data.
+    /// </summary>
+
+    [Route("api/products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        // Jag valde att samla alla requests som gäller produkter i en controller
-        // jag hade troligtvis gjort annorlunda om jag hade fler produkter.
-        // Eftersom controllern bara hanterar produkter så följer den fortfarnade SRP.
-
-        private readonly IDataLayer _data;
-        public ProductsController(IDataLayer data)
+        private readonly IGetProductsService _get;
+        public ProductsController(IGetProductsService get)
         {
-            _data = data;
+            _get = get;
         }
 
-        #region Get requests
         [HttpGet]
         public async Task<IEnumerable<IProductModel>> GetProductsAsync() =>
-            await _data.GetProductsAsync();
-
-        [HttpGet("{id}")]
-        public async Task<ObjectResult> GetProductAsync(int id) =>
-            await _data.GetProductAsync(id);
-        #endregion
-
-        #region Post requests
-        
-        [HttpPost("shoe")]
-        public async Task<IActionResult> CreateShoeAsync(ShoeModel product) =>
-            await _data.CreateProductAsync(product);
-
-        [HttpPost("dress")]
-        public async Task<IActionResult> CreateDressAsync(DressModel product) =>
-            await _data.CreateProductAsync(product);
-        #endregion
-
-        #region Update requests
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProductAsync(int id, IProductModel productUpdate) =>
-            await _data.UpdateProductAsync();
-        #endregion
-
-        #region Delete requests
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProductAsync(int id) =>
-            await _data.DeleteProductAsync();
-        #endregion
+            await _get.GetProductsAsync();
     }
 }

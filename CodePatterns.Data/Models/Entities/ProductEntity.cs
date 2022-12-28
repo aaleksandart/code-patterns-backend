@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace CodePatterns.Data.Models.Entities
 {
+    /// <summary>
+    /// ProductEntity innehåller generell fakta om produkten.
+    /// Detta innehåll är detsamma oavsett typ av produkt.
+    /// </summary>
     public class ProductEntity
     {
         [Key]

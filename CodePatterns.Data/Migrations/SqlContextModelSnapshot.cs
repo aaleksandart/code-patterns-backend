@@ -46,6 +46,9 @@ namespace CodePatterns.Data.Migrations
                     b.Property<bool>("Heels")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 

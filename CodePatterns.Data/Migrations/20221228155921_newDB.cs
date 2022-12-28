@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CodePatterns.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class DBINIT : Migration
+    public partial class newDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,7 @@ namespace CodePatterns.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Barcode = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Price = table.Column<decimal>(type: "money", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShoeType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShoeLaces = table.Column<bool>(type: "bit", nullable: true),

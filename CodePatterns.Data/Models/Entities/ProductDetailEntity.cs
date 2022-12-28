@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 
 namespace CodePatterns.Data.Models.Entities
 {
+    /// <summary>
+    /// ProductDetailEntity innehåller alla detaljer för en produkt både generella och typ specifika.
+    /// </summary>
     public class ProductDetailEntity
     {
         [Key]
         public int Id { get; set; }
         public Guid Barcode { get; set; }
+        [Column(TypeName = "money")]
+        public decimal Price { get; set; }
         public string Color { get; set; } = "white";
 
         [AllowNull]

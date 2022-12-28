@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodePatterns.Data.Migrations
 {
     [DbContext(typeof(SqlContext))]
-    [Migration("20221215145004_DB-INIT")]
-    partial class DBINIT
+    [Migration("20221228155921_newDB")]
+    partial class newDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace CodePatterns.Data.Migrations
 
                     b.Property<bool>("Heels")
                         .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CodePatterns.Data.Models.Entities
 {
+    /// <summary>
+    /// ProductTypeEntity innehåller de produkttyper som finns. 
+    /// </summary>
     public class ProductTypeEntity
     {
         [Key]

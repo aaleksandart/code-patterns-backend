@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace CodePatterns.Data.Models
 {
+    /// <summary>
+    /// Basen för alla produkter ProductModel har alla generalla attribut för en produkt.
+    /// SRP: ProductModel har bara attribut som gäller en produkt.
+    /// OCP: Vi kan utöka den här klassen utan att ändra på existerande kod och då använda arv.
+    /// LSP: Vi kan ersätta basen med IShoe eller IDress.
+    /// ISP: Alla specifika produkters interface ärver av detta interface.
+    /// </summary>
     public interface IProductModel
     {
         int Id { get; set; }
@@ -13,6 +20,7 @@ namespace CodePatterns.Data.Models
         string Name { get; set; }
         string Description { get; set; }
         Guid Barcode { get; set; }
+        decimal Price { get; set; }
         string Color { get; set; }
 
     }
@@ -23,6 +31,7 @@ namespace CodePatterns.Data.Models
         public string Name { get; set; } = null!;
         public string Description { get; set; } = string.Empty!;
         public Guid Barcode { get; set; }
+        public virtual decimal Price { get; set; }
         public string Color { get; set; } = null!;
     }
 }

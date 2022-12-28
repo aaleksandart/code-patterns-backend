@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 
 namespace CodePatterns.Data.Models
 {
+    /// <summary>
+    /// SRP: ShoeModel har bara attribut som gäller en shoe, resterande ärvs från IProduct/ProductModel.
+    /// OCP: Vi kan utöka den här klassen utan att ändra på existerande kod och då använda arv.
+    /// LSP: Vi kan ersätta basen ProductModel med ShoeModel om så behövs.
+    /// ISP: IShoeModel ärver av IProductModel men inte av IDress vilket gör 
+    /// att den bara ärver attribut som den verkligen behöver.
+    /// </summary>
     public interface IShoeModel : IProductModel
     {
         string ShoeType { get; set; }
         bool? ShoeLaces { get; set; }
         bool Heels { get; set; }
-        string ProductType { get; set; }
     }
     public class ShoeModel : ProductModel, IShoeModel
     {
