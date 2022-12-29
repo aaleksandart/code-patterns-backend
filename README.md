@@ -4,7 +4,7 @@ Instruktioner:
 
 	Lägg till din connection string i appsettings.json "DatabaseSettings": "ConnectionString"
 
-	Kör Package Manager Console på projekt "CodePatterns.Data":
+	Kör Package Manager Console och välj projekt "CodePatterns.Data":
 		-add-migration
 		-update-database
 
