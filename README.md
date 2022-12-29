@@ -4,11 +4,11 @@ Instruktioner:
 
 	Lägg till din connection string i appsettings.json "DatabaseSettings": "ConnectionString"
 
-	Kör Package Manager Console
+	Kör Package Manager Console på projekt "CodePatterns.Data":
 		-add-migration
 		-update-database
 
-	Starta upp projektet
+	Starta upp projektet:
 		-Använd DefaultProductsController via swagger för att lägga till färdiga produkter i databasen
 
 
