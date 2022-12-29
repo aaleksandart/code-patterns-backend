@@ -19,4 +19,4 @@ Om projektet:
 	och ta beslut om vad som faktiskt är viktigast.
 	Jag har kommenterat varje separat klass kortfattat med vilka principer som använts.
 	SRP följs i alla klasser medans tex LSP inte alls används lika mycket och det beror på att
-	behovet inte funnits på många ställen. 
+	behovet för detta inte funnits överallt. 
